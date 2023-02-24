@@ -57,7 +57,7 @@ export default function Home() {
       </Head>
       <Layout>
         <main className={styles.main}>
-          <h1>Hallo World</h1>
+          <h1>Primeiro app sergio</h1>
           {data.map((value,index) => {
             return(
               <div key={index}>
