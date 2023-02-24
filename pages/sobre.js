@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
 import Layout from '@/src/layout/layout'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
@@ -8,35 +7,17 @@ import useSWR from 'swr';
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function Home() {
+export default function Sobre() {
 
-  //const { data, error, isLoading } = useSWR('http://127.0.0.1:8000/api/auth/todos',  (url) => {
-  const { data, error, isLoading } = useSWR('https://jsonplaceholder.typicode.com/todos',  (url) => {
-     return axios.get(url)
-    .then(function (response) {
-      console.log(response.data);
-      return response.data;
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  })
-
-  if (isLoading) 
-    return <p>Loading ...</p>
-  else{
-    console.log(data);
-  }
-
-
- /*const [todos,setTodos] = useState([]); 
+ const [todos,setTodos] = useState([]); 
 
   useEffect(() => {
     const iniciar = async () => {
-      await axios.get('http://127.0.0.1:8000/api/auth/todos')
-      //await axios.get('https://jsonplaceholder.typicode.com/todos')
+      //await axios.get('http://127.0.0.1:8000/api/auth/todos')
+      await axios.get('https://jsonplaceholder.typicode.com/todos')
       .then(function (response) {
         console.log(response);
+        //setTodos([...todos, response.data]);
         setTodos(response.data);
       })
       .catch(function (error) {
@@ -45,7 +26,7 @@ export default function Home() {
     }
 
     iniciar();
-  },[])*/
+  },[])
 
   return (
     <>
@@ -56,9 +37,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
-        <main className={styles.main}>
+        <main >
           <h1>Hallo World</h1>
-          {data.map((value,index) => {
+          {todos.map((value,index) => {
             return(
               <div key={index}>
                 

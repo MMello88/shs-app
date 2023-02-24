@@ -1,0 +1,1 @@
+rsc = Atalho para criar padrao das funções iniciais da tela
