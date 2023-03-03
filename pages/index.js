@@ -15,12 +15,10 @@ export default function Home() {
   const [cidade,setCidade] = useState("");
   const [uf,setUf] = useState("");
 
+  const [objeto,setObjeto] = useState({});
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    setEndereco('');
-    setCidade('');
-    setUf('');
 
     let dataCep = await axios.get('https://viacep.com.br/ws/'+cep+'/json/')
                   .then(function (response) {
@@ -31,9 +29,17 @@ export default function Home() {
                     console.log(error);
                   });
 
-    setEndereco(dataCep.logradouro);
-    setCidade(dataCep.localidade);
-    setUf(dataCep.uf);
+    setObjeto(dataCep);
+                   
+    if (dataCep?.erro !== undefined) {
+      setEndereco('');
+      setCidade('');
+      setUf('');
+    } else {
+      setEndereco(dataCep?.logradouro);
+      setCidade(dataCep?.localidade);
+      setUf(dataCep?.uf);
+    }
   }
 
   return (
@@ -58,7 +64,7 @@ export default function Home() {
               required
               minlength="8"
               maxlength="8" 
-              pattern="[0-9]{1,15}"
+              //pattern="[0-9]{1,8}"
             />
             <button type="submit">Pesquisar</button>
             <br/>
@@ -86,6 +92,7 @@ export default function Home() {
               onChange={(e) => {setUf(e.target.value)}} 
             />
           </form>
+          <p>{objeto?.logradouro}</p>
         </main>
       </Layout>
     </>
