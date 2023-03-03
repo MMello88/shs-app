@@ -10,42 +10,31 @@ const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
 
-  //const { data, error, isLoading } = useSWR('http://127.0.0.1:8000/api/auth/todos',  (url) => {
-  const { data, error, isLoading } = useSWR('https://jsonplaceholder.typicode.com/todos',  (url) => {
-     return axios.get(url)
-    .then(function (response) {
-      console.log(response.data);
-      return response.data;
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  })
+  const [cep,setCep] = useState(""); 
+  const [endereco,setEndereco] = useState(""); 
+  const [cidade,setCidade] = useState("");
+  const [uf,setUf] = useState("");
 
-  if (isLoading) 
-    return <p>Loading ...</p>
-  else{
-    console.log(data);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setEndereco('');
+    setCidade('');
+    setUf('');
+
+    let dataCep = await axios.get('https://viacep.com.br/ws/'+cep+'/json/')
+                  .then(function (response) {
+                    console.log(response.data);
+                    return response.data;
+                  })
+                  .catch(function (error) {
+                    console.log(error);
+                  });
+
+    setEndereco(dataCep.logradouro);
+    setCidade(dataCep.localidade);
+    setUf(dataCep.uf);
   }
-
-
- /*const [todos,setTodos] = useState([]); 
-
-  useEffect(() => {
-    const iniciar = async () => {
-      await axios.get('http://127.0.0.1:8000/api/auth/todos')
-      //await axios.get('https://jsonplaceholder.typicode.com/todos')
-      .then(function (response) {
-        console.log(response);
-        setTodos(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    }
-
-    iniciar();
-  },[])*/
 
   return (
     <>
@@ -58,14 +47,45 @@ export default function Home() {
       <Layout>
         <main className={styles.main}>
           <h1>Primeiro app sergio</h1>
-          {data.map((value,index) => {
-            return(
-              <div key={index}>
-                
-                <h5>{value.name ? value.name : value.title}</h5>
-              </div>
-            );
-          })}
+        
+          <form onSubmit={handleSubmit}>
+            <label for="first">CEP:</label>
+            <br/>
+            <input 
+              type="text" 
+              value={cep} 
+              onChange={(e) => {setCep(e.target.value)}}
+              required
+              minlength="8"
+              maxlength="8" 
+              pattern="[0-9]{1,15}"
+            />
+            <button type="submit">Pesquisar</button>
+            <br/>
+            <label for="first">Endereço</label>
+            <br/>
+            <input 
+              type="text" 
+              value={endereco}
+              onChange={(e) => {setEndereco(e.target.value)}} 
+            />
+            <br/>
+            <label for="first">Cidade</label>
+            <br/>
+            <input 
+              type="text" 
+              value={cidade}
+              onChange={(e) => {setCidade(e.target.value)}} 
+            />
+            <br/>
+            <label for="first">UF</label>
+            <br/>
+            <input 
+              type="text" 
+              value={uf}
+              onChange={(e) => {setUf(e.target.value)}} 
+            />
+          </form>
         </main>
       </Layout>
     </>
